@@ -1,43 +1,94 @@
-import React, { useState } from 'react'
+// import React from 'react'
+// import Question from './Question'
+// import {BrowserRouter,Routes,Route} from 'react-router-dom'
+// import ProductDetails from './ProductDetails'
 
-function App() {
+// function App() {
 
 
-  const faqs = [
-    {
-      question : "What is React?",
-      answer : "React is javascript"
-    },
-    {
-      question : "What is React?",
-      answer : "React is javascript"
-    },
-    {
-      question : "What is React?",
-      answer : "React is javascript"
-    }
-  ]
 
-  const [isActive, setIsActive] = useState(null)
+//   return (
+//     // <Question/>
+//     <BrowserRouter>
+//     <Routes>
+//       <Route path="/" element={<Home />} />
+//       <Route path="/product/:id" element={<ProductDetails />} />
+//     </Routes>
+//     </BrowserRouter>
+//   )
+// }
 
-  const toggleAns = (index) => {
-    setIsActive( isActive === index ? null : index)
-  }
+// export default App
+
+import React from "react";
+import { BrowserRouter as Router, Route, Routes, Link, useParams, useNavigate } from "react-router-dom";
+
+// 📌 Navbar Component
+function Navbar() {
+  const navigate = useNavigate()
   return (
-    <div className="App">
-    {faqs.map((faq, index) => (
-      <div key={faq.index} style={{ borderBottom: "2px solid black" }}>
-        <div onClick={() => toggleAns(index)}>
-          {faq.question} <span>{isActive === index ? ">" : "<"}</span>
-        </div>
-        <div>{isActive === index && <div>{faq.answer}</div>}</div>
-      </div>
-    ))}
-    </div>
-
-  )
+    <nav className="p-4 bg-blue-500 text-white flex gap-4">
+      {/* <Link to="/">Home</Link>
+      <Link to="/products">Products</Link> */}
+      <button
+      onClick={() => navigate('/')}
+      >Home</button>
+      <button
+      onClick={() => navigate('/products')}
+      >Product</button>
+    </nav>
+  );
 }
 
-export default App
+// 📌 Home Page
+function Home() {
+  return <h1 className="text-center mt-5">🏠 Welcome to Home Page</h1>;
+}
+
+// 📌 Products Page (List of Products)
+function Products() {
+  const productList = [
+    { id: 1, name: "Laptop" },
+    { id: 2, name: "Smartphone" },
+    { id: 3, name: "Headphones" }
+  ];
+  const navigate = useNavigate()
+
+  return (
+    <div className="text-center mt-5">
+      <h1>🛍️ Products List</h1>
+      {productList.map((product) => (
+        <p key={product.id}>
+          {/* <Link to={`/products/${product.id}`}>{product.name}</Link> */}
+          <button
+          onClick={() =>{
+            navigate(`/products/${product.id}`)
+          }}
+          >{product.name}</button>
+        </p>
+      ))}
+    </div>
+  );
+}
+
+// 📌 Product Details Page (Dynamic Routing with useParams)
+function ProductDetails() {
+  const { productId } = useParams();
+  return <h1 className="text-center mt-5">🛍️ Product Details for ID: {productId}</h1>;
+}
+
+// 📌 Main App Component with Routing
+export default function App() {
+  return (
+    <Router>
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/products" element={<Products />} />
+        <Route path="/products/:productId" element={<ProductDetails />} />
+      </Routes>
+    </Router>
+  );
+}
 
 
